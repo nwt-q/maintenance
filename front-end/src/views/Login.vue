@@ -2,26 +2,52 @@
   <div class="container">
     <div class="form-structor">
       <div class="signup" :class="pageState.isLoginPage ? 'slide-up' : ''">
-        <h2 class="form-title" id="signup" @click="() => this.pageState.isLoginPage = false">
+        <h2
+          class="form-title"
+          id="signup"
+          @click="() => (this.pageState.isLoginPage = false)"
+        >
           <span>或</span>注册
         </h2>
         <div class="form-holder">
-            <input type="text" v-model="registerPage.mobile" class="input" placeholder="手机号"/>
-            <input type="password" v-model="registerPage.password" class="input" placeholder="密码"/>
-
+          <input
+            type="text"
+            v-model="registerPage.mobile"
+            class="input"
+            placeholder="手机号"
+          />
+          <input
+            type="password"
+            v-model="registerPage.password"
+            class="input"
+            placeholder="密码"
+          />
         </div>
         <button class="submit-btn" @click="doSignUp">确定</button>
       </div>
       <div class="login" :class="pageState.isLoginPage ? '' : 'slide-up'">
         <div class="center">
-          <h2 class="form-title" id="login" @click="() => this.pageState.isLoginPage = true">
+          <h2
+            class="form-title"
+            id="login"
+            @click="() => (this.pageState.isLoginPage = true)"
+          >
             <span>或</span>
           </h2>
           <h4 style="text-align: center">故障收集系统</h4>
           <div class="form-holder">
-            <input type="text" v-model="loginPage.mobile" class="input" placeholder="手机号"/>
-            <input type="password" v-model="loginPage.password" class="input" placeholder="密码"/>
-
+            <input
+              type="text"
+              v-model="loginPage.mobile"
+              class="input"
+              placeholder="手机号"
+            />
+            <input
+              type="password"
+              v-model="loginPage.password"
+              class="input"
+              placeholder="密码"
+            />
           </div>
           <button class="submit-btn" @click="doLogin">登录</button>
         </div>
@@ -29,8 +55,7 @@
     </div>
   </div>
 </template>
-  
-  
+
 <script>
 export default {
   data() {
@@ -39,77 +64,82 @@ export default {
         isLoginPage: true,
       },
       loginPage: {
-        mobile: '',
-        password: '',
-
+        mobile: "",
+        password: "",
       },
       registerPage: {
-        mobile: '',
-        password: '',
-
+        mobile: "",
+        password: "",
       },
     };
   },
   methods: {
     doLogin() {
       if (!this.$verify.checkPhone(this.loginPage.mobile)) {
-        this.$hint.message.error('手机号不合法');
+        this.$hint.message.error("手机号不合法");
         return;
       }
       if (!this.$verify.checkPassword(this.loginPage.password)) {
-        this.$hint.message.error('密码必须包含数字、大小写字母、特殊字符，长度8-16位');
+        this.$hint.message.error(
+          "密码必须包含数字、大小写字母、特殊字符，长度8-16位"
+        );
         return;
       }
 
-      this.$verify.emptyCheckObject(this.loginPage).then(obj => {
-        this.$http.doLogin(obj.mobile,obj.password).then(res => {
-          if (res.code === 200) {
-            let user = res.data.e2;
-            this.$store.commit('setCurrentUser', user);
-            this.$store.commit('setToken', res.data.e1);
-            if (user.identity === '管理员') {
-                this.$router.replace('/MangeIndex');
+      this.$verify
+        .emptyCheckObject(this.loginPage)
+        .then((obj) => {
+          this.$http.doLogin(obj.mobile, obj.password).then((res) => {
+            if (res.code === 200) {
+              let user = res.data.e2;
+              this.$store.commit("setCurrentUser", user);
+              this.$store.commit("setToken", res.data.e1);
+              if (user.identity === "管理员") {
+                this.$router.replace("/MangeIndex");
+              }
+              if (user.identity === "学生") {
+                this.$router.replace("/StudentIndex");
+              }
+              if (user.identity === "维修师") {
+                this.$router.replace("/MaintenanceIndex");
+              }
             }
-            if (user.identity === '学生') {
-                this.$router.replace('/StudentIndex');
-            } 
-            if( user.identity === '维修人员') {
-                this.$router.replace('/RepairIndex');
-            }
-          }
+          });
         })
-
-      }).catch(err => {
-        this.$hint.message.error(err);
-      })
+        .catch((err) => {
+          this.$hint.message.error(err);
+        });
     },
     doSignUp() {
       if (!this.$verify.checkPhone(this.registerPage.mobile)) {
-        this.$hint.message.error('手机号不合法');
+        this.$hint.message.error("手机号不合法");
         return;
       }
       if (!this.$verify.checkPassword(this.registerPage.password)) {
-        this.$hint.message.error('密码必须包含数字、大小写字母、特殊字符，长度8-16位');
+        this.$hint.message.error(
+          "密码必须包含数字、大小写字母、特殊字符，长度8-16位"
+        );
         return;
       }
-      this.registerPage.identity ='学生';
-      this.$verify.emptyCheckObject(this.registerPage).then(obj => {
-        this.$http.createUser(obj).then(res => {
-          if (res.code === 200) {
-            this.pageState.isLoginPage = true;
-            this.$util.trimFieldsToEmpty(this.registerPage, []);
-          }
+      this.registerPage.identity = "学生";
+      this.$verify
+        .emptyCheckObject(this.registerPage)
+        .then((obj) => {
+          this.$http.createUser(obj).then((res) => {
+            if (res.code === 200) {
+              this.pageState.isLoginPage = true;
+              this.$util.trimFieldsToEmpty(this.registerPage, []);
+            }
+          });
         })
-
-      }).catch(err => {
-        this.$hint.message.error(err);
-      })
+        .catch((err) => {
+          this.$hint.message.error(err);
+        });
     },
   },
 };
 </script>
-  
-  
+
 <style scoped>
 .container {
   width: 100%;
@@ -139,7 +169,7 @@ export default {
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: 500px;
-  background-image: url('../static/background_top.jpg');
+  background-image: url("../static/background_top.jpg");
   opacity: 0.8;
 }
 

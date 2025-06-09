@@ -52,14 +52,10 @@
                         <i class="el-icon-s-custom"></i>
                         <span slot="title">维修人员管理</span>
                     </el-menu-item>
-                    
+
                     <el-menu-item index="/MangeIndex/ManageCategoryCondition" @click="$router.replace('/MangeIndex/ManageCategoryCondition')">
                         <i class="el-icon-paperclip"></i>
                         <span slot="title">维修类别管理</span>
-                    </el-menu-item>
-                    <el-menu-item index="/MangeIndex/MaintenanceKnowledgeBase" @click="$router.replace('/MangeIndex/MaintenanceKnowledgeBase')">
-                        <i class="el-icon-paperclip"></i>
-                        <span slot="title">维修知识库</span>
                     </el-menu-item>
                     <el-menu-item index="/MangeIndex/ManageRecordCondition" @click="$router.replace('/MangeIndex/ManageRecordCondition')">
                         <i class="el-icon-tickets"></i>
