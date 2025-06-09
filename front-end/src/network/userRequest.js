@@ -363,5 +363,38 @@ export default {
       params: params,
     });
   },
+
+  getAccessoryList(params) {
+    return request({
+      url: "/accessories/list", // 查询所有配件的接口路径
+      method: "get",
+      params: params, // 查询参数通常放在 params 中
+    });
+  },
+
+  addAccessory(data) {
+    return request({
+      url: "/accessories/add", // 添加配件的接口路径
+      method: "post",
+      params: data, // POST 请求的数据通常放在 data 中
+      // 如果你的后端期望POST请求的数据也在params中，可以改成：
+      // params: data,
+    });
+  },
+
+  claimAccessory(data) {
+    return request({
+      url: "/accessories/claim", // 领取配件的接口路径
+      method: "post", // 领取通常被视为一种资源状态的变更，用POST或PUT
+      params: data, // 领取的数据通常放在 data 中
+    });
+  },
+
+  deleteAccessory(id) {
+    return request({
+      url: `/accessories/delete/${id}`, // 删除配件的接口路径，通过路径参数传递ID
+      method: "delete", // 删除操作通常使用DELETE方法
+    });
+  },
 };
 

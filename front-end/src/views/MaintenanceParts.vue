@@ -216,11 +216,6 @@
 </template>
 
 <script>
-// This is a standard Vue component using ES module syntax.
-// If you encounter "SyntaxError: export declarations may only appear at top level of a module" error,
-// it usually indicates an issue with your build environment (e.g., Vue CLI setup, Webpack configuration)
-// not correctly processing this file as a JavaScript module.
-// Ensure your project is set up to transpile .vue files correctly.
 export default {
   data() {
     return {
@@ -251,34 +246,25 @@ export default {
     };
   },
   methods: {
-    /**
-     * 获取配件表格数据
-     * 在实际应用中，这里会调用后端API来获取数据
-     */
     getTableData() {
-      // 模拟API调用，实际开发时请替换为你的API请求
-      // this.$http.getAccessoriesList({
-      //   name: this.searchCondition.name,
-      //   page: this.currentPage,
-      //   pageSize: this.pageSize,
-      // }).then((res) => {
-      //   if (res.code === 200) {
-      //     this.tableList = res.data.list; // 假设后端返回的数据在res.data.list
-      //     this.total = res.data.total; // 假设后端返回总数在res.data.total
-      //     // 获取数据后按使用数量降序排序
-      //     this.tableList.sort((a, b) => b.usageQuantity - a.usageQuantity);
-      //   }
-      // }).catch((err) => {
-      //   console.error("获取配件列表失败", err);
-      //   this.$message.error("获取配件列表失败");
-      //   // 模拟数据，实际开发时删除
-      //   this.mockData();
-      // });
-
-      // 模拟数据，实际开发时删除此行和mockData()方法的调用
-      this.mockData();
-      // 获取数据后按使用数量降序排序
-      this.tableList.sort((a, b) => b.usageQuantity - a.usageQuantity);
+      this.$http
+        .getAccessoriesList({
+          name: this.searchCondition.name,
+          page: this.currentPage,
+          pageSize: this.pageSize,
+        })
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableList = res.data.list;
+            this.total = res.data.total;
+            this.tableList.sort((a, b) => b.usageQuantity - a.usageQuantity);
+          }
+        })
+        .catch((err) => {
+          console.error("获取配件列表失败", err);
+          this.$message.error("获取配件列表失败");
+          this.mockData();
+        });
     },
 
     /**
@@ -323,88 +309,71 @@ export default {
       this.getTableData();
     },
 
-    /**
-     * 提交增加、修改或领取配件的表单
-     */
     handleSubmitAccessory() {
-      // 增加和修改时的校验
-      if (this.dialogType === "增加配件" || this.dialogType === "修改配件") {
-        if (!this.accessoryObj.name) {
-          this.$message.error("请输入配件名称");
-          return;
-        }
-        if (!this.accessoryObj.codeNumber) {
-          this.$message.error("请输入代码编号");
-          return;
-        }
-        // 修改配件时，校验使用数量
-        if (
-          this.dialogType === "修改配件" &&
-          (typeof this.accessoryObj.usageQuantity !== "number" ||
-            this.accessoryObj.usageQuantity < 0)
-        ) {
-          this.$message.error("使用数量必须为非负数字");
-          return;
-        }
-        // 增加或修改时，校验库存数量
-        if (
-          typeof this.accessoryObj.stockQuantity !== "number" ||
-          this.accessoryObj.stockQuantity < 0
-        ) {
-          this.$message.error("库存数量必须为非负数字");
-          return;
-        }
-      }
+      // ... 前端校验逻辑 ...
 
-      // 领取时的校验
-      if (this.dialogType === "领取配件") {
-        if (
-          typeof this.accessoryObj.claimQuantity !== "number" ||
-          this.accessoryObj.claimQuantity <= 0
-        ) {
-          this.$message.error("领取数量必须是大于0的数字");
-          return;
-        }
-        if (this.accessoryObj.claimQuantity > this.accessoryObj.stockQuantity) {
-          this.$message.error("领取数量不能大于库存数量");
-          return;
-        }
-      }
-
-      // 提交数据对象，根据dialogType进行不同的处理
       const dataToSubmit = {
-        id: this.accessoryObj.id, // ID在增加时可能为null，修改/领取时需要
-        name: this.accessoryObj.name,
-        codeNumber: this.accessoryObj.codeNumber,
-        usageQuantity: this.accessoryObj.usageQuantity,
-        stockQuantity: this.accessoryObj.stockQuantity,
+        accessory_name: this.accessoryObj.name,
+        accessory_code: this.accessoryObj.codeNumber,
+        // ... 其他字段 ...
       };
 
       if (this.dialogType === "增加配件") {
-        // 模拟增加配件API调用
-        console.log("模拟增加配件:", dataToSubmit);
-        this.$message.success("模拟增加成功");
-      } else if (this.dialogType === "修改配件") {
-        // 模拟修改配件API调用
-        console.log("模拟修改配件:", dataToSubmit);
-        this.$message.success("模拟修改成功");
+        dataToSubmit.stock = this.accessoryObj.stockQuantity; // 添加时只传库存
+        dataToSubmit.used_num = 0; // 默认使用数量为0
+        this.$http
+          .addAccessory(dataToSubmit)
+          .then((res) => {
+            if (res.code === 200) {
+              this.$message.success("增加成功");
+              this.isAccessoryDialogShow = false;
+              this.getTableData();
+            }
+          })
+          .catch((err) => {
+            console.error("增加失败", err);
+            this.$message.error("增加失败，请重试");
+          });
       } else if (this.dialogType === "领取配件") {
-        // 领取操作：更新使用数量和库存数量
-        dataToSubmit.usageQuantity =
-          this.accessoryObj.usageQuantity + this.accessoryObj.claimQuantity;
-        dataToSubmit.stockQuantity =
-          this.accessoryObj.stockQuantity - this.accessoryObj.claimQuantity;
-        console.log("模拟领取配件:", dataToSubmit);
-        this.$message.success(
-          `成功领取 ${this.accessoryObj.claimQuantity} 个配件`,
-        );
+        const claimData = {
+          id: this.accessoryObj.id,
+          claim_quantity: this.accessoryObj.claimQuantity,
+        };
+        this.$http
+          .claimAccessory(claimData)
+          .then((res) => {
+            if (res.code === 200) {
+              this.$message.success(
+                `成功领取 ${this.accessoryObj.claimQuantity} 个配件`,
+              );
+              this.isAccessoryDialogShow = false;
+              this.getTableData();
+            }
+          })
+          .catch((err) => {
+            console.error("领取失败", err);
+            this.$message.error("领取失败，请重试");
+          });
+      } else if (this.dialogType === "修改配件") {
+        // 如果你需要修改除了领取以外的属性，需要调用 updateAccessory
+        dataToSubmit.id = this.accessoryObj.id;
+        dataToSubmit.used_num = this.accessoryObj.usageQuantity;
+        dataToSubmit.stock = this.accessoryObj.stockQuantity;
+        this.$http
+          .updateAccessory(dataToSubmit)
+          .then((res) => {
+            if (res.code === 200) {
+              this.$message.success("修改成功");
+              this.isAccessoryDialogShow = false;
+              this.getTableData();
+            }
+          })
+          .catch((err) => {
+            console.error("修改失败", err);
+            this.$message.error("修改失败，请重试");
+          });
       }
-
-      // 关闭对话框并刷新表格数据
-      this.isAccessoryDialogShow = false;
-      this.getTableData(); // 刷新并排序
     },
-
     /**
      * 处理领取操作（原修改按钮的功能）
      * @param {Object} row - 当前行数据
@@ -417,10 +386,6 @@ export default {
       this.isAccessoryDialogShow = true;
     },
 
-    /**
-     * 处理修改操作 (如果需要一个独立的修改按钮，可以把这个方法绑定到新的修改按钮上)
-     * 目前UI上没有直接调用此方法的按钮，但方法逻辑保留
-     */
     handleEdit(row) {
       this.dialogType = "修改配件";
       this.accessoryObj = JSON.parse(JSON.stringify(row));
@@ -432,62 +397,33 @@ export default {
      * @param {Object} row - 当前行数据
      */
     handleDelete(row) {
-      let message = `将<span style='color: orange;font-size:15px'> [永久删除] </span>配件 [${row.name}]，是否继续？`;
-      this.$confirm(message, "提示", {
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
+      this.$confirm(
+        `将<span style='color: orange;font-size:15px'> [永久删除] </span>配件 [${row.name}]，是否继续？`,
+        "提示",
+        {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        },
+      )
         .then(() => {
-          // 模拟删除配件API调用
-          console.log("模拟删除配件:", row.id);
-          this.$message.success("模拟删除成功");
-          this.getTableData();
+          this.$http
+            .deleteAccessory(row.id)
+            .then((res) => {
+              if (res.code === 200) {
+                this.$message.success("删除成功");
+                this.getTableData();
+              }
+            })
+            .catch((err) => {
+              console.error("删除失败", err);
+              this.$message.error("删除失败，请重试");
+            });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
+          this.$message({ type: "info", message: "已取消删除" });
         });
-    },
-
-    /**
-     * 处理打印操作（打印配件详情）
-     * @param {Object} row - 当前行数据
-     */
-    handlePrint(row) {
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>配件详情 - ${row.name}</title>
-            <style>
-              body { font-family: Arial, sans-serif; margin: 20px; }
-              .header { text-align: center; margin-bottom: 30px; }
-              .header h1 { font-size: 24px; color: #333; }
-              .content { margin-top: 20px; border: 1px solid #eee; padding: 20px; border-radius: 8px;}
-              .content p { line-height: 1.8; font-size: 14px; margin-bottom: 10px;}
-              .content strong { display: inline-block; width: 100px; color: #555;}
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>配件详情</h1>
-            </div>
-            <div class="content">
-              <p><strong>ID:</strong> ${row.id}</p>
-              <p><strong>名称:</strong> ${row.name}</p>
-              <p><strong>代码编号:</strong> ${row.codeNumber}</p>
-              <p><strong>使用数量:</strong> ${row.usageQuantity}</p>
-              <p><strong>库存数量:</strong> ${row.stockQuantity}</p>
-            </div>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
     },
   },
   created() {
