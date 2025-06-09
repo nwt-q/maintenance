@@ -255,9 +255,10 @@ export default {
         })
         .then((res) => {
           if (res.code === 200) {
-            this.tableList = res.data.list;
-            this.total = res.data.total;
-            this.tableList.sort((a, b) => b.usageQuantity - a.usageQuantity);
+            this.tableList = res.data;
+            this.total = res.data.length;
+            // this.tableList.sort((a, b) => b.usageQuantity - a.usageQuantity);
+            console.log("获取配件列表成功", this.tableList);
           }
         })
         .catch((err) => {
@@ -427,6 +428,7 @@ export default {
     },
   },
   created() {
+    console.log("MaintenanceParts.vue created");
     this.getTableData();
   },
 };

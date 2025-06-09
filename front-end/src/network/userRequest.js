@@ -364,7 +364,7 @@ export default {
     });
   },
 
-  getAccessoryList(params) {
+  getAccessoriesList(params) {
     return request({
       url: "/accessories/list", // 查询所有配件的接口路径
       method: "get",

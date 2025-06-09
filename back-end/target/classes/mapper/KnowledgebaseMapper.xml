@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ptcc9.mapper.KnowledgebaseMapper">
+
+    <resultMap id="BaseResultMap" type="top.ptcc9.entity.Knowledgebase">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="filename" column="describe" jdbcType="VARCHAR"/>
+            <result property="description" column="describe" jdbcType="VARCHAR"/>
+            <result property="download" column="download" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updataTime" column="updata_time" jdbcType="TIMESTAMP"/>
+            <result property="creater" column="creater" jdbcType="VARCHAR"/>
+            <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,describe,download,
+        create_time,updata_time,creater,
+        updater
+    </sql>
+    <select id="selectByPage" resultType="top.ptcc9.entity.Knowledgebase">
+        SELECT * FROM KnowledgeBase
+        <where>
+            <if test="name != null and name != ''">
+                filename LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="startTime != null ">
+               AND  create_time &gt;= #{startTime}
+            </if>
+           <if test="endTime != null">
+              AND  create_time &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY id DESC
+        <if test="pageStart != null and pageSize != null">
+            LIMIT #{pageStart}, #{pageSize}
+        </if>
+    </select>
+</mapper>

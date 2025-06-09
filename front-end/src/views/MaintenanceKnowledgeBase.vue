@@ -435,6 +435,7 @@ export default {
     },
   },
   created() {
+    console.log("MaintenanceKnowledgeBase created");
     this.getTableData();
   },
 };
