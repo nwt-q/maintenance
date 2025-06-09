@@ -42,6 +42,30 @@
       </div>
     </el-dialog>
     <div class="container">
+      <div class="search">
+        <el-row :gutter="20" style="margin-top: 20px">
+          <el-col :span="3" :offset="1">
+            <el-date-picker
+              type="datetime"
+              size="mini"
+              placeholder="开始时间"
+              value-format="timestamp"
+            >
+            </el-date-picker>
+          </el-col>
+
+          <el-col :span="3">
+            <el-date-picker
+              type="datetime"
+              size="mini"
+              placeholder="结束时间"
+              value-format="timestamp"
+            >
+            </el-date-picker>
+          </el-col>
+        </el-row>
+      </div>
+
       <div class="table">
         <el-table
           :data="tableList"
@@ -62,16 +86,16 @@
           </el-table-column>
           <el-table-column
             label="设备名"
-            min-width="10"
+            min-width="3"
             :show-overflow-tooltip="true"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.device_name }}</span>
+              <span>{{ scope.row.deviceName }}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="工单状态"
-            min-width="10"
+            min-width="3"
             :show-overflow-tooltip="true"
           >
             <template slot-scope="scope">
@@ -84,7 +108,7 @@
             :show-overflow-tooltip="true"
           >
             <template slot-scope="scope">
-              <span>{{ scope.row.descript }}</span>
+              <span>{{ scope.row.description }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -109,7 +133,7 @@
           >
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <span>{{ $util.timestamp2Str(scope.row.create_time) }}</span>
+                <span>{{ $util.timestamp2Str(scope.row.createTime) }}</span>
               </div>
             </template>
           </el-table-column>
@@ -133,7 +157,16 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="bottom"></div>
+      <div class="bottom">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -144,16 +177,10 @@ export default {
       searchCondition: {
         username: "",
       },
-      tableList: [
-        {
-          id: 4,
-          device_name: "设备1",
-          status: "处理中",
-          create_time: "2025-06-09 15:31:29",
-          descript: "123123123123123",
-          photo: "",
-        },
-      ],
+      total: 0,
+      currentPage: 1,
+      pageSize: 7,
+      tableList: [],
       detailObj: {},
       createObj: {},
       isDetailDialogShow: false,
@@ -161,6 +188,29 @@ export default {
     };
   },
   methods: {
+    getTableData() {
+      this.$http
+        .getWorkOrder(this.currentPage, this.pageSize)
+        .then((res) => {
+          if (res.code === 200) {
+            this.tableList = res.data;
+            this.tableList.sort((a, b) => {
+              const aTime = new Date(a.createTime);
+              const bTime = new Date(b.createTime);
+              return bTime - aTime;
+            });
+            this.total = res.data.length;
+          }
+        })
+        .catch((err) => {
+          console.error("获取列表失败", err);
+        });
+    },
+
+    handleCurrentChange(e) {
+      this.getTableData(e, this.pageSize);
+    },
+
     handleComplete(row) {
       row.status = "已完成";
     },
@@ -183,6 +233,10 @@ export default {
       this.tableList.push(this.createObj);
       this.isCreateDialogShow = false;
     },
+  },
+
+  created() {
+    this.getTableData();
   },
 };
 </script>
@@ -308,5 +362,12 @@ export default {
   height: 100px;
   display: block;
   border-radius: 5px;
+}
+
+.bottom {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
