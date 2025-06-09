@@ -343,22 +343,24 @@ export default {
     });
   },
 
-  getWorkOrder(page, pageSize) {
+  getWorkOrder(page, pageSize, startTime, endTime) {
     return request({
       url: "/workOrder",
       method: "get",
       params: {
         page,
         pageSize,
+        startTime,
+        endTime,
       },
     });
   },
 
-  updateWorkOrder() {
+  updateWorkOrder(params) {
     return request({
       url: "/updataworkOrder",
       method: "post",
-
+      params: params,
     });
   },
 };

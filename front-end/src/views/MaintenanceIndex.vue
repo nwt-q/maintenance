@@ -90,14 +90,23 @@
             <i class="el-icon-folder-opened"></i>
             <span slot="title">我的代办工单</span>
           </el-menu-item>
+          <el-menu-item
+            index="/MaintenanceIndex/MaintenanceParts"
+            @click="$router.replace('/MaintenanceIndex/MaintenanceParts')"
+          >
+            <i class="el-icon-folder-opened"></i>
+            <span slot="title">配件</span>
+          </el-menu-item>
 
-           <el-menu-item
-            @click="$router.replace('/MaintenanceIndex/MaintenanceKnowledgeBase')"
+          <el-menu-item
+            index="/MaintenanceIndex/MaintenanceKnowledgeBase"
+            @click="
+              $router.replace('/MaintenanceIndex/MaintenanceKnowledgeBase')
+            "
           >
             <i class="el-icon-folder-opened"></i>
             <span slot="title">维修知识库</span>
           </el-menu-item>
-
 
           <el-menu-item index="/index/store" @click="logOut">
             <i class="el-icon-switch-button"></i>

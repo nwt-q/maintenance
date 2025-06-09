@@ -85,9 +85,14 @@ const routes = [
         component: () => import("../views/Todo.vue"),
       },
       {
-        path: 'MaintenanceKnowledgeBase',
-        name: 'MaintenanceKnowledgeBase',
-        component: () => import('../views/MaintenanceKnowledgeBase.vue'),
+        path: "MaintenanceParts",
+        name: "Parts",
+        component: () => import("../views/MaintenanceParts.vue"),
+      },
+      {
+        path: "MaintenanceKnowledgeBase",
+        name: "MaintenanceKnowledgeBase",
+        component: () => import("../views/MaintenanceKnowledgeBase.vue"),
       },
     ],
   },

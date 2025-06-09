@@ -25,7 +25,7 @@
         <el-form-item label="维修记录描述:">
           <el-input
             clearable
-            v-model="createObj.descript"
+            v-model="createObj.description"
             style="width: 85%"
             :rows="10"
             type="textarea"
@@ -46,20 +46,24 @@
         <el-row :gutter="20" style="margin-top: 20px">
           <el-col :span="3" :offset="1">
             <el-date-picker
+              v-model="searchCondition.startTime"
               type="datetime"
               size="mini"
               placeholder="开始时间"
               value-format="timestamp"
+              @change="getTableData"
             >
             </el-date-picker>
           </el-col>
 
           <el-col :span="3">
             <el-date-picker
+              v-model="searchCondition.endTime"
               type="datetime"
               size="mini"
               placeholder="结束时间"
               value-format="timestamp"
+              @change="getTableData"
             >
             </el-date-picker>
           </el-col>
@@ -151,6 +155,7 @@
                 type="primary"
                 @click="handleComplete(scope.row)"
                 icon="el-icon-edit"
+                :disabled="scope.row.status === '已完成'"
                 >完成工单</el-button
               >
             </template>
@@ -175,7 +180,8 @@ export default {
   data() {
     return {
       searchCondition: {
-        username: "",
+        startTime: null,
+        endTime: null,
       },
       total: 0,
       currentPage: 1,
@@ -190,7 +196,12 @@ export default {
   methods: {
     getTableData() {
       this.$http
-        .getWorkOrder(this.currentPage, this.pageSize)
+        .getWorkOrder(
+          this.currentPage,
+          this.pageSize,
+          this.searchCondition.startTime,
+          this.searchCondition.endTime,
+        )
         .then((res) => {
           if (res.code === 200) {
             this.tableList = res.data;
@@ -211,8 +222,18 @@ export default {
       this.getTableData(e, this.pageSize);
     },
 
-    handleComplete(row) {
+    async handleComplete(row) {
       row.status = "已完成";
+      const params = {
+        id: row.id,
+        device_name: row.deviceName,
+        create_time: row.createTime,
+        photo: row.photo,
+        status: row.status,
+        description: row.description,
+      };
+      await this.$http.updateWorkOrder(params);
+      this.getTableData(this.currentPage, this.pageSize);
     },
 
     handleEdit(row) {
@@ -226,11 +247,17 @@ export default {
       this.createObj.photo = URL.createObjectURL(file.raw);
     },
 
-    handleSubmit() {
-      this.tableList = this.tableList.filter((item) => {
-        return item.id != this.createObj.id;
-      });
-      this.tableList.push(this.createObj);
+    async handleSubmit() {
+      const params = {
+        id: this.createObj.id,
+        device_name: this.createObj.deviceName,
+        create_time: this.createObj.createTime,
+        photo: this.createObj.photo,
+        status: this.createObj.status,
+        description: this.createObj.description,
+      };
+      await this.$http.updateWorkOrder(params);
+      this.getTableData(this.currentPage, this.pageSize);
       this.isCreateDialogShow = false;
     },
   },
