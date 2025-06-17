@@ -5,26 +5,52 @@
       <div slot="title" class="dialog-title">
         编辑维修记录<span style="color: red">（{{ this.dialogType }}）</span>
       </div>
-      <el-form :model="createObj" status-icon label-width="150px" class="demo-ruleForm" style="font-size: 10px">
+      <el-form
+        :model="createObj"
+        status-icon
+        label-width="150px"
+        class="demo-ruleForm"
+        style="font-size: 10px"
+      >
         <el-form-item label="维修记录图片:">
-          <el-upload action="" :show-file-list="false" :on-change="handleChange">
+          <el-upload
+            action=""
+            :show-file-list="false"
+            :on-change="handleChange"
+          >
             <img v-if="createObj.photo" :src="createObj.photo" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
 
         <el-form-item label="维修记录描述:">
-          <el-input clearable v-model="createObj.description" style="width: 85%" :rows="10" type="textarea"></el-input>
+          <el-input
+            clearable
+            v-model="createObj.description"
+            style="width: 85%"
+            :rows="10"
+            type="textarea"
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="验收说明:" v-if="createObj.status === '已完成'">
-          <el-input clearable v-model="createObj.acceptanceNote" style="width: 85%" :rows="5" type="textarea"
-            placeholder="请填写验收说明"></el-input>
+          <el-input
+            clearable
+            v-model="createObj.acceptanceNote"
+            style="width: 85%"
+            :rows="5"
+            type="textarea"
+            placeholder="请填写验收说明"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div style="display: flex; align-items: center">
-        <el-button style="margin: auto; margin-top: 2vh; width: 50%" type="primary"
-          @click="handleSubmit">确认提交</el-button>
+        <el-button
+          style="margin: auto; margin-top: 2vh; width: 50%"
+          type="primary"
+          @click="handleSubmit"
+          >确认提交</el-button
+        >
       </div>
     </el-dialog>
 
@@ -37,12 +63,20 @@
           <p><strong>工单号：</strong>{{ printObj.id }}</p>
           <p><strong>设备名称：</strong>{{ printObj.deviceName }}</p>
           <p><strong>维修描述：</strong>{{ printObj.description }}</p>
-          <p><strong>维修时间：</strong>{{ $util.timestamp2Str(printObj.createTime) }}</p>
+          <p>
+            <strong>维修时间：</strong
+            >{{ $util.timestamp2Str(printObj.createTime) }}
+          </p>
           <p><strong>维修状态：</strong>{{ printObj.status }}</p>
-          <p v-if="printObj.acceptanceNote"><strong>验收说明：</strong>{{ printObj.acceptanceNote }}</p>
+          <p v-if="printObj.acceptanceNote">
+            <strong>验收说明：</strong>{{ printObj.acceptanceNote }}
+          </p>
           <div v-if="printObj.photo">
             <p><strong>维修图片：</strong></p>
-            <img :src="printObj.photo" style="max-width: 300px; max-height: 300px" />
+            <img
+              :src="printObj.photo"
+              style="max-width: 300px; max-height: 300px"
+            />
           </div>
           <div class="signature-area">
             <p><strong>用户签名：</strong>________________________</p>
@@ -51,7 +85,9 @@
         </div>
       </div>
       <div style="display: flex; justify-content: center; margin-top: 20px">
-        <el-button type="primary" @click="printServiceConfirmation">打印确认单</el-button>
+        <el-button type="primary" @click="printServiceConfirmation"
+          >打印确认单</el-button
+        >
       </div>
     </el-dialog>
 
@@ -65,8 +101,12 @@
                 <span>本月工单完成率</span>
               </div>
               <div class="completion-rate">
-                <el-progress :percentage="completionRate" :color="customColorMethod" :format="format"
-                  :stroke-width="18"></el-progress>
+                <el-progress
+                  :percentage="completionRate"
+                  :color="customColorMethod"
+                  :format="format"
+                  :stroke-width="18"
+                ></el-progress>
               </div>
             </el-card>
           </el-col>
@@ -76,10 +116,16 @@
                 <span>未读消息</span>
               </div>
               <div class="message-count">
-                <el-badge :value="unreadMessageCount" :max="99" class="message-badge">
-                  <i class="el-icon-message" style="font-size: 24px;"></i>
+                <el-badge
+                  :value="unreadMessageCount"
+                  :max="99"
+                  class="message-badge"
+                >
+                  <i class="el-icon-message" style="font-size: 24px"></i>
                 </el-badge>
-                <span class="message-text">您有 {{ unreadMessageCount }} 条未读消息</span>
+                <span class="message-text"
+                  >您有 {{ unreadMessageCount }} 条未读消息</span
+                >
               </div>
             </el-card>
           </el-col>
@@ -89,8 +135,12 @@
                 <span>离线功能</span>
               </div>
               <div class="offline-function">
-                <el-switch v-model="offlineMode" active-text="启用离线模式" inactive-text="在线模式"
-                  @change="toggleOfflineMode"></el-switch>
+                <el-switch
+                  v-model="offlineMode"
+                  active-text="启用离线模式"
+                  inactive-text="在线模式"
+                  @change="toggleOfflineMode"
+                ></el-switch>
                 <div v-if="offlineMode" class="offline-status">
                   <i class="el-icon-download"></i>
                   <span>已缓存 {{ cachedWorkOrderCount }} 个工单</span>
@@ -105,20 +155,40 @@
       <div class="search">
         <el-row :gutter="20" style="margin-top: 20px">
           <el-col :span="3" :offset="1">
-            <el-date-picker v-model="searchCondition.startTime" type="datetime" size="mini" placeholder="开始时间"
-              value-format="timestamp" @change="getTableData">
+            <el-date-picker
+              v-model="searchCondition.startTime"
+              type="datetime"
+              size="mini"
+              placeholder="开始时间"
+              value-format="timestamp"
+              @change="getTableData"
+            >
             </el-date-picker>
           </el-col>
 
           <el-col :span="3">
-            <el-date-picker v-model="searchCondition.endTime" type="datetime" size="mini" placeholder="结束时间"
-              value-format="timestamp" @change="getTableData">
+            <el-date-picker
+              v-model="searchCondition.endTime"
+              type="datetime"
+              size="mini"
+              placeholder="结束时间"
+              value-format="timestamp"
+              @change="getTableData"
+            >
             </el-date-picker>
           </el-col>
 
           <el-col :span="4">
-            <el-select v-model="sortType" placeholder="排序方式" size="mini" @change="handleSortChange">
-              <el-option label="创建时间降序" value="createTimeDesc"></el-option>
+            <el-select
+              v-model="sortType"
+              placeholder="排序方式"
+              size="mini"
+              @change="handleSortChange"
+            >
+              <el-option
+                label="创建时间降序"
+                value="createTimeDesc"
+              ></el-option>
               <el-option label="到期时间升序" value="dueTimeAsc"></el-option>
               <el-option label="距离远近排序" value="distanceAsc"></el-option>
             </el-select>
@@ -126,9 +196,27 @@
 
           <el-col :span="8" :offset="1">
             <el-button-group>
-              <el-button size="mini" type="primary" icon="el-icon-download" @click="exportToExcel">导出工单记录</el-button>
-              <el-button size="mini" type="success" icon="el-icon-refresh" @click="getTableData">刷新数据</el-button>
-              <el-button size="mini" type="warning" icon="el-icon-message" @click="checkMessages">查看消息</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                icon="el-icon-download"
+                @click="exportToExcel"
+                >导出工单记录</el-button
+              >
+              <el-button
+                size="mini"
+                type="success"
+                icon="el-icon-refresh"
+                @click="getTableData"
+                >刷新数据</el-button
+              >
+              <el-button
+                size="mini"
+                type="warning"
+                icon="el-icon-message"
+                @click="checkMessages"
+                >查看消息</el-button
+              >
             </el-button-group>
           </el-col>
         </el-row>
@@ -136,69 +224,136 @@
 
       <!-- 表格区域 -->
       <div class="table">
-        <el-table :data="tableList" style="width: 95%" height="100%" max-height="100%" empty-text="无匹配行"
-          :cell-style="{ padding: '5px' }">
-          <el-table-column label="工单号" min-width="3" :show-overflow-tooltip="true">
+        <el-table
+          :data="tableList"
+          style="width: 95%"
+          height="100%"
+          max-height="100%"
+          empty-text="无匹配行"
+          :cell-style="{ padding: '5px' }"
+        >
+          <el-table-column
+            label="工单号"
+            min-width="4"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.id }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="设备名" min-width="3" :show-overflow-tooltip="true">
+          <el-table-column
+            label="设备名"
+            min-width="4"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.deviceName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="工单状态" min-width="3" :show-overflow-tooltip="true">
+          <el-table-column
+            label="工单状态"
+            min-width="5"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
-              <el-tag :type="scope.row.status === '已完成' ? 'success' : 'warning'">
+              <el-tag
+                :type="scope.row.status === '已完成' ? 'success' : 'warning'"
+              >
                 {{ scope.row.status }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="维修记录描述" min-width="10" :show-overflow-tooltip="true">
+          <el-table-column
+            label="维修记录描述"
+            min-width="6"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <span>{{ scope.row.description }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="维修记录图片" min-width="10" :show-overflow-tooltip="true">
+          <el-table-column
+            label="维修记录图片"
+            min-width="6"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
-              <el-image style="width: 80px; height: 80px" :src="scope.row.photo" :preview-src-list="[scope.row.photo]">
+              <el-image
+                style="width: 80px; height: 80px"
+                :src="scope.row.photo"
+                :preview-src-list="[scope.row.photo]"
+              >
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="地址" min-width="8" :show-overflow-tooltip="true">
+          <el-table-column
+            label="地址"
+            min-width="10"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <div v-if="scope.row.address">
-                <el-button size="mini" type="info" icon="el-icon-location" @click="navigateToLocation(scope.row)">
+                <el-button
+                  size="mini"
+                  type="info"
+                  icon="el-icon-location"
+                  @click="navigateToLocation(scope.row)"
+                >
                   {{ scope.row.address }}
                 </el-button>
               </div>
               <span v-else>暂无地址信息</span>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" min-width="8" :show-overflow-tooltip="true">
+          <el-table-column
+            label="创建时间"
+            min-width="8"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
                 <span>{{ $util.timestamp2Str(scope.row.createTime) }}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="到期时间" min-width="8" :show-overflow-tooltip="true">
+          <el-table-column
+            label="到期时间"
+            min-width="8"
+            :show-overflow-tooltip="true"
+          >
             <template slot-scope="scope">
               <div slot="reference" class="name-wrapper">
-                <span v-if="scope.row.dueTime">{{ $util.timestamp2Str(scope.row.dueTime) }}</span>
+                <span v-if="scope.row.dueTime">{{
+                  $util.timestamp2Str(scope.row.dueTime)
+                }}</span>
                 <span v-else>无到期时间</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="操作" min-width="15">
             <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleEdit(scope.row)"
-                icon="el-icon-edit">编辑维修记录</el-button>
-              <el-button size="mini" type="success" @click="handleComplete(scope.row)" icon="el-icon-check"
-                :disabled="scope.row.status === '已完成'">完成工单</el-button>
-              <el-button size="mini" type="info" @click="handlePrint(scope.row)"
-                icon="el-icon-printer">打印确认单</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleEdit(scope.row)"
+                icon="el-icon-edit"
+                >编辑维修记录</el-button
+              >
+              <el-button
+                size="mini"
+                type="success"
+                @click="handleComplete(scope.row)"
+                icon="el-icon-check"
+                :disabled="scope.row.status === '已完成'"
+                >完成工单</el-button
+              >
+              <el-button
+                size="mini"
+                type="info"
+                @click="handlePrint(scope.row)"
+                icon="el-icon-printer"
+                >打印确认单</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -206,28 +361,60 @@
 
       <!-- 分页区域 -->
       <div class="bottom">
-        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize"
-          layout="total, prev, pager, next, jumper" :total="total">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total"
+        >
         </el-pagination>
       </div>
     </div>
 
     <!-- 消息通知抽屉 -->
-    <el-drawer title="工单消息通知" :visible.sync="messageDrawerVisible" direction="rtl" size="30%">
+    <el-drawer
+      title="工单消息通知"
+      :visible.sync="messageDrawerVisible"
+      direction="rtl"
+      size="30%"
+    >
       <div class="message-list">
-        <el-empty v-if="messages.length === 0" description="暂无消息"></el-empty>
-        <el-card v-for="(message, index) in messages" :key="index" class="message-card" shadow="hover">
+        <el-empty
+          v-if="messages.length === 0"
+          description="暂无消息"
+        ></el-empty>
+        <el-card
+          v-for="(message, index) in messages"
+          :key="index"
+          class="message-card"
+          shadow="hover"
+        >
           <div slot="header" class="clearfix">
             <span>{{ message.title }}</span>
-            <el-tag size="mini" :type="message.read ? 'info' : 'danger'" style="float: right; margin-top: 3px">
-              {{ message.read ? '已读' : '未读' }}
+            <el-tag
+              size="mini"
+              :type="message.read ? 'info' : 'danger'"
+              style="float: right; margin-top: 3px"
+            >
+              {{ message.read ? "已读" : "未读" }}
             </el-tag>
           </div>
           <div class="message-content">{{ message.content }}</div>
-          <div class="message-time">{{ $util.timestamp2Str(message.time) }}</div>
+          <div class="message-time">
+            {{ $util.timestamp2Str(message.time) }}
+          </div>
           <div class="message-actions">
-            <el-button size="mini" type="text" @click="markAsRead(index)" :disabled="message.read">标为已读</el-button>
-            <el-button size="mini" type="text" @click="deleteMessage(index)">删除</el-button>
+            <el-button
+              size="mini"
+              type="text"
+              @click="markAsRead(index)"
+              :disabled="message.read"
+              >标为已读</el-button
+            >
+            <el-button size="mini" type="text" @click="deleteMessage(index)"
+              >删除</el-button
+            >
           </div>
         </el-card>
       </div>
@@ -235,7 +422,7 @@
   </div>
 </template>
 <script>
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 export default {
   data() {
@@ -246,7 +433,7 @@ export default {
       },
       total: 0,
       currentPage: 1,
-      pageSize: 7,
+      pageSize: 10,
       tableList: [],
       detailObj: {},
       createObj: {},
@@ -254,7 +441,7 @@ export default {
       isDetailDialogShow: false,
       isCreateDialogShow: false,
       isPrintDialogShow: false,
-      sortType: 'createTimeDesc',
+      sortType: "createTimeDesc",
       completionRate: 0,
       offlineMode: false,
       cachedWorkOrderCount: 0,
@@ -262,7 +449,7 @@ export default {
       messages: [],
       messageDrawerVisible: false,
       currentLocation: null,
-      dialogType: '',
+      dialogType: "",
     };
   },
   methods: {
@@ -274,11 +461,11 @@ export default {
     // 进度条颜色
     customColorMethod(percentage) {
       if (percentage < 30) {
-        return '#909399';
+        return "#909399";
       } else if (percentage < 70) {
-        return '#e6a23c';
+        return "#e6a23c";
       } else {
-        return '#67c23a';
+        return "#67c23a";
       }
     },
 
@@ -286,7 +473,7 @@ export default {
     getTableData(page = this.currentPage, pageSize = this.pageSize) {
       // 如果是离线模式，从本地存储获取数据
       if (this.offlineMode) {
-        const cachedData = localStorage.getItem('cachedWorkOrders');
+        const cachedData = localStorage.getItem("cachedWorkOrders");
         if (cachedData) {
           try {
             const parsedData = JSON.parse(cachedData);
@@ -296,7 +483,7 @@ export default {
             this.calculateCompletionRate();
             return;
           } catch (e) {
-            console.error('解析缓存数据失败', e);
+            console.error("解析缓存数据失败", e);
           }
         }
       }
@@ -312,7 +499,7 @@ export default {
         .then((res) => {
           if (res.code === 200) {
             // 为每个工单添加模拟的到期时间和地址
-            this.tableList = res.data.map(item => {
+            this.tableList = res.data.map((item) => {
               // 如果没有到期时间，添加一个模拟的到期时间（创建时间后7天）
               if (!item.dueTime) {
                 const createDate = new Date(item.createTime);
@@ -324,18 +511,19 @@ export default {
               // 如果没有地址，添加一个模拟的地址
               if (!item.address) {
                 const addresses = [
-                  '北京市海淀区中关村大街1号',
-                  '上海市浦东新区张江高科技园区',
-                  '广州市天河区天河路385号',
-                  '深圳市南山区科技园',
-                  '杭州市西湖区西溪路556号',
+                  "北京市海淀区中关村大街1号",
+                  "上海市浦东新区张江高科技园区",
+                  "广州市天河区天河路385号",
+                  "深圳市南山区科技园",
+                  "杭州市西湖区西溪路556号",
                 ];
-                item.address = addresses[Math.floor(Math.random() * addresses.length)];
+                item.address =
+                  addresses[Math.floor(Math.random() * addresses.length)];
               }
 
               // 如果没有验收说明，添加一个空的验收说明字段
-              if (!item.acceptanceNote && item.status === '已完成') {
-                item.acceptanceNote = '';
+              if (!item.acceptanceNote && item.status === "已完成") {
+                item.acceptanceNote = "";
               }
 
               return item;
@@ -350,7 +538,10 @@ export default {
             this.calculateCompletionRate();
 
             // 缓存工单数据用于离线模式
-            localStorage.setItem('cachedWorkOrders', JSON.stringify(this.tableList));
+            localStorage.setItem(
+              "cachedWorkOrders",
+              JSON.stringify(this.tableList),
+            );
             this.cachedWorkOrderCount = this.tableList.length;
           }
         })
@@ -363,7 +554,7 @@ export default {
     // 应用排序
     applySorting() {
       switch (this.sortType) {
-        case 'createTimeDesc':
+        case "createTimeDesc":
           // 默认按创建时间降序排序
           this.tableList.sort((a, b) => {
             const aTime = new Date(a.createTime);
@@ -371,15 +562,19 @@ export default {
             return bTime - aTime;
           });
           break;
-        case 'dueTimeAsc':
+        case "dueTimeAsc":
           // 按到期时间升序排序
           this.tableList.sort((a, b) => {
-            const aTime = a.dueTime ? new Date(a.dueTime) : new Date(8640000000000000);
-            const bTime = b.dueTime ? new Date(b.dueTime) : new Date(8640000000000000);
+            const aTime = a.dueTime
+              ? new Date(a.dueTime)
+              : new Date(8640000000000000);
+            const bTime = b.dueTime
+              ? new Date(b.dueTime)
+              : new Date(8640000000000000);
             return aTime - bTime;
           });
           break;
-        case 'distanceAsc':
+        case "distanceAsc":
           // 按距离排序（这里是模拟的，实际应用中需要真实的地理位置计算）
           if (this.currentLocation) {
             // 这里应该有真实的距离计算逻辑
@@ -402,18 +597,35 @@ export default {
     calculateCompletionRate() {
       // 获取当前月份的开始和结束时间
       const now = new Date();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).getTime();
+      const startOfMonth = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1,
+      ).getTime();
+      const endOfMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+        23,
+        59,
+        59,
+      ).getTime();
 
       // 筛选本月的工单
-      const monthlyOrders = this.tableList.filter(order => {
-        return order.createTime >= startOfMonth && order.createTime <= endOfMonth;
+      const monthlyOrders = this.tableList.filter((order) => {
+        return (
+          order.createTime >= startOfMonth && order.createTime <= endOfMonth
+        );
       });
 
       // 计算完成率
       if (monthlyOrders.length > 0) {
-        const completedOrders = monthlyOrders.filter(order => order.status === '已完成');
-        this.completionRate = Math.round((completedOrders.length / monthlyOrders.length) * 100);
+        const completedOrders = monthlyOrders.filter(
+          (order) => order.status === "已完成",
+        );
+        this.completionRate = Math.round(
+          (completedOrders.length / monthlyOrders.length) * 100,
+        );
       } else {
         this.completionRate = 0;
       }
@@ -422,23 +634,25 @@ export default {
     // 导出Excel
     exportToExcel() {
       // 准备导出数据
-      const exportData = this.tableList.map(item => {
+      const exportData = this.tableList.map((item) => {
         return {
-          '工单号': item.id,
-          '设备名称': item.deviceName,
-          '工单状态': item.status,
-          '维修描述': item.description,
-          '创建时间': this.$util.timestamp2Str(item.createTime),
-          '到期时间': item.dueTime ? this.$util.timestamp2Str(item.dueTime) : '无',
-          '地址': item.address || '无',
-          '验收说明': item.acceptanceNote || '无',
+          工单号: item.id,
+          设备名称: item.deviceName,
+          工单状态: item.status,
+          维修描述: item.description,
+          创建时间: this.$util.timestamp2Str(item.createTime),
+          到期时间: item.dueTime
+            ? this.$util.timestamp2Str(item.dueTime)
+            : "无",
+          地址: item.address || "无",
+          验收说明: item.acceptanceNote || "无",
         };
       });
 
       // 创建工作簿
       const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, '工单记录');
+      XLSX.utils.book_append_sheet(workbook, worksheet, "工单记录");
 
       // 生成文件名
       const fileName = `工单记录_${this.$util.getCurrentDateFormat()}.xlsx`;
@@ -446,7 +660,7 @@ export default {
       // 导出Excel
       XLSX.writeFile(workbook, fileName);
 
-      this.$message.success('导出成功');
+      this.$message.success("导出成功");
     },
 
     // 打印服务确认单
@@ -458,7 +672,7 @@ export default {
     // 执行打印
     printServiceConfirmation() {
       const printContent = this.$refs.printContent.innerHTML;
-      const printWindow = window.open('', '_blank');
+      const printWindow = window.open("", "_blank");
       printWindow.document.write(`
         <html>
           <head>
@@ -483,23 +697,23 @@ export default {
     getCurrentLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          position => {
+          (position) => {
             this.currentLocation = {
               latitude: position.coords.latitude,
-              longitude: position.coords.longitude
+              longitude: position.coords.longitude,
             };
             // 获取位置后重新排序（如果当前是按距离排序）
-            if (this.sortType === 'distanceAsc') {
+            if (this.sortType === "distanceAsc") {
               this.applySorting();
             }
           },
-          error => {
-            console.error('获取位置失败:', error);
-            this.$message.warning('获取位置信息失败，无法按距离排序');
-          }
+          (error) => {
+            console.error("获取位置失败:", error);
+            this.$message.warning("获取位置信息失败，无法按距离排序");
+          },
         );
       } else {
-        this.$message.warning('您的浏览器不支持地理定位功能');
+        this.$message.warning("您的浏览器不支持地理定位功能");
       }
     },
 
@@ -509,9 +723,9 @@ export default {
         // 在实际应用中，这里应该跳转到地图应用或使用地图API
         // 这里模拟跳转到百度地图
         const url = `https://api.map.baidu.com/geocoder?address=${encodeURIComponent(row.address)}&output=html`;
-        window.open(url, '_blank');
+        window.open(url, "_blank");
       } else {
-        this.$message.warning('该工单没有地址信息');
+        this.$message.warning("该工单没有地址信息");
       }
     },
 
@@ -519,25 +733,27 @@ export default {
     toggleOfflineMode(value) {
       if (value) {
         // 启用离线模式，确保已缓存数据
-        const cachedData = localStorage.getItem('cachedWorkOrders');
+        const cachedData = localStorage.getItem("cachedWorkOrders");
         if (!cachedData) {
-          this.$message.warning('没有缓存数据，请先连接网络获取数据');
+          this.$message.warning("没有缓存数据，请先连接网络获取数据");
           this.offlineMode = false;
           return;
         }
         try {
           const parsedData = JSON.parse(cachedData);
           this.cachedWorkOrderCount = parsedData.length;
-          this.$message.success(`已启用离线模式，共缓存了 ${this.cachedWorkOrderCount} 个工单`);
+          this.$message.success(
+            `已启用离线模式，共缓存了 ${this.cachedWorkOrderCount} 个工单`,
+          );
           this.getTableData(); // 从缓存加载数据
         } catch (e) {
-          console.error('解析缓存数据失败', e);
-          this.$message.error('缓存数据损坏，请重新连接网络获取数据');
+          console.error("解析缓存数据失败", e);
+          this.$message.error("缓存数据损坏，请重新连接网络获取数据");
           this.offlineMode = false;
         }
       } else {
         // 禁用离线模式，从服务器获取最新数据
-        this.$message.info('已切换到在线模式，将获取最新数据');
+        this.$message.info("已切换到在线模式，将获取最新数据");
         this.getTableData();
       }
     },
@@ -551,30 +767,30 @@ export default {
     markAsRead(index) {
       this.messages[index].read = true;
       this.updateUnreadCount();
-      localStorage.setItem('workOrderMessages', JSON.stringify(this.messages));
+      localStorage.setItem("workOrderMessages", JSON.stringify(this.messages));
     },
 
     // 删除消息
     deleteMessage(index) {
       this.messages.splice(index, 1);
       this.updateUnreadCount();
-      localStorage.setItem('workOrderMessages', JSON.stringify(this.messages));
+      localStorage.setItem("workOrderMessages", JSON.stringify(this.messages));
     },
 
     // 更新未读消息数量
     updateUnreadCount() {
-      this.unreadMessageCount = this.messages.filter(msg => !msg.read).length;
+      this.unreadMessageCount = this.messages.filter((msg) => !msg.read).length;
     },
 
     // 加载消息
     loadMessages() {
-      const savedMessages = localStorage.getItem('workOrderMessages');
+      const savedMessages = localStorage.getItem("workOrderMessages");
       if (savedMessages) {
         try {
           this.messages = JSON.parse(savedMessages);
           this.updateUnreadCount();
         } catch (e) {
-          console.error('解析消息数据失败', e);
+          console.error("解析消息数据失败", e);
           this.messages = [];
           this.unreadMessageCount = 0;
         }
@@ -589,26 +805,26 @@ export default {
       const now = Date.now();
       this.messages = [
         {
-          title: '新工单分配通知',
-          content: '您有一个新的维修工单已分配，请及时处理。',
+          title: "新工单分配通知",
+          content: "您有一个新的维修工单已分配，请及时处理。",
           time: now,
-          read: false
+          read: false,
         },
         {
-          title: '工单即将到期提醒',
-          content: '您有3个工单即将到期，请尽快处理。',
+          title: "工单即将到期提醒",
+          content: "您有3个工单即将到期，请尽快处理。",
           time: now - 86400000, // 1天前
-          read: true
+          read: true,
         },
         {
-          title: '系统维护通知',
-          content: '系统将于今晚22:00-23:00进行维护，请提前做好工作安排。',
+          title: "系统维护通知",
+          content: "系统将于今晚22:00-23:00进行维护，请提前做好工作安排。",
           time: now - 172800000, // 2天前
-          read: false
-        }
+          read: false,
+        },
       ];
       this.updateUnreadCount();
-      localStorage.setItem('workOrderMessages', JSON.stringify(this.messages));
+      localStorage.setItem("workOrderMessages", JSON.stringify(this.messages));
     },
 
     handleCurrentChange(e) {
@@ -638,8 +854,11 @@ export default {
 
     async handleSubmit() {
       // 验证表单
-      if (this.createObj.status === '已完成' && !this.createObj.acceptanceNote) {
-        this.$message.warning('请填写验收说明');
+      if (
+        this.createObj.status === "已完成" &&
+        !this.createObj.acceptanceNote
+      ) {
+        this.$message.warning("请填写验收说明");
         return;
       }
 
@@ -655,25 +874,28 @@ export default {
 
       try {
         await this.$http.updateWorkOrder(params);
-        this.$message.success('操作成功');
+        this.$message.success("操作成功");
         this.getTableData(this.currentPage, this.pageSize);
         this.isCreateDialogShow = false;
 
         // 如果是完成工单操作，添加一条新消息
         if (this.dialogType === "完成") {
           const newMessage = {
-            title: '工单完成通知',
+            title: "工单完成通知",
             content: `工单 ${this.createObj.id} 已完成处理。`,
             time: Date.now(),
-            read: false
+            read: false,
           };
           this.messages.unshift(newMessage);
           this.updateUnreadCount();
-          localStorage.setItem('workOrderMessages', JSON.stringify(this.messages));
+          localStorage.setItem(
+            "workOrderMessages",
+            JSON.stringify(this.messages),
+          );
         }
       } catch (error) {
-        console.error('更新工单失败', error);
-        this.$message.error('操作失败，请重试');
+        console.error("更新工单失败", error);
+        this.$message.error("操作失败，请重试");
       }
     },
   },
@@ -771,7 +993,7 @@ export default {
 
 .offline-status i {
   margin-right: 5px;
-  color: #409EFF;
+  color: #409eff;
 }
 
 /* 搜索区域样式 */
@@ -871,7 +1093,7 @@ export default {
 /* 打印内容样式 */
 .print-content {
   padding: 20px;
-  border: 1px solid #EBEEF5;
+  border: 1px solid #ebeef5;
   border-radius: 4px;
   background-color: #fff;
 }
@@ -909,7 +1131,7 @@ export default {
 
 .message-actions {
   text-align: right;
-  border-top: 1px solid #EBEEF5;
+  border-top: 1px solid #ebeef5;
   padding-top: 10px;
 }
 
