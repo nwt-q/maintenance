@@ -6,6 +6,7 @@
 
     <resultMap id="BaseResultMap" type="top.ptcc9.domain.Accessory">
             <id property="id" column="id" jdbcType="INTEGER"/>
+
             <result property="accessoryName" column="accessory_name" jdbcType="VARCHAR"/>
             <result property="accessoryCode" column="accessory_code" jdbcType="VARCHAR"/>
             <result property="usedNum" column="used_num" jdbcType="INTEGER"/>
@@ -16,6 +17,12 @@
         id,accessory_name,accessory_code,
         used_num,stock
     </sql>
+    <update id="updateUsedNum">
+        UPDATE accessory
+        SET used_num = used_num + #{ct},
+        stock = stock - #{ct}
+        WHERE id = #{id}
+    </update>
     <select id="selectList" resultType="top.ptcc9.domain.Accessory">
 
             SELECT
@@ -41,5 +48,8 @@
             </where>
             ORDER BY used_num DESC
             LIMIT #{page}, #{pageSize}
+    </select>
+    <select id="selectAList" resultType="top.ptcc9.domain.Accessory">
+        SELECT * FROM accessory
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package top.ptcc9.service;
 
 import top.ptcc9.common.R;
+import top.ptcc9.controller.vo.AccessoryDataReqVO;
 import top.ptcc9.controller.vo.AccessoryReqVO;
 import top.ptcc9.domain.Accessory;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -15,4 +16,6 @@ import java.util.List;
 public interface AccessoryService extends IService<Accessory> {
 
     List<AccessoryReqVO> listAccessories(AccessoryReqVO params);
+
+    List<AccessoryDataReqVO> getList();
 }

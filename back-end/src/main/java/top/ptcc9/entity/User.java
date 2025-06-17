@@ -1,9 +1,11 @@
 package top.ptcc9.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import top.ptcc9.annotations.FieldsDes;
 
 public class User {
 
+    @TableId
     private String id;
 
     @FieldsDes(desc = "姓名")
@@ -15,14 +17,19 @@ public class User {
     @FieldsDes(desc = "身份")
     private String identity;
 
+    @FieldsDes(desc = "手机号")
     private String mobile;
 
+    @FieldsDes(desc = "邮箱")
     private String email;
 
+    @FieldsDes(desc = "QQ号")
     private String qq;
 
+    @FieldsDes(desc = "真实姓名")
     private String nickname;
 
+    @FieldsDes(desc = "创建时间")
     private Long createTime;
 
     public String getId() {

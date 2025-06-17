@@ -6,7 +6,9 @@ import java.time.ZoneId;
 
 public class WorkOrderReqVO {
 
-    private Long id;
+    private String id;
+
+    private String mobile;
 
     private String deviceName;
 
@@ -14,17 +16,76 @@ public class WorkOrderReqVO {
 
     private String createTime;
 
+    // 紧急程度
+    private String emergencyLevel;
+
+    // 时限制
+    private String timeoutMinutes;
+
+    // 原因
+    private String categoryName;
+
     private String photo;
 
     private String status;
 
-    private Long startTime;
+    private String startTime;
 
-    private Long endTime;
+    private String endTime;
 
     private Integer  page;
 
     private Integer  pageSize;
+
+    private String address;
+
+    public String getEmergencyLevel() {
+        return emergencyLevel;
+    }
+
+    public void setEmergencyLevel(String emergencyLevel) {
+        this.emergencyLevel = emergencyLevel;
+    }
+
+    public String getTimeoutMinutes() {
+        return timeoutMinutes;
+    }
+
+    public void setTimeoutMinutes(String timeoutMinutes) {
+        this.timeoutMinutes = timeoutMinutes;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
     public Integer getPage() {
         return page;
@@ -42,11 +103,11 @@ public class WorkOrderReqVO {
         this.pageSize = pageSize;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -90,27 +151,35 @@ public class WorkOrderReqVO {
         this.status = status;
     }
 
-    public LocalDateTime getStartTime() {
+    public LocalDateTime getStartTime(Long t) {
         if (startTime == null) return null;
         return LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(startTime),
+                Instant.ofEpochMilli(Long.parseLong(startTime)),
                 ZoneId.systemDefault()
         );
     }
 
-    public LocalDateTime getEndTime() {
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public LocalDateTime getEndTime(Long y) {
         if (endTime == null) return null;
         return LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(endTime),
+                Instant.ofEpochMilli(Long.parseLong(endTime)),
                 ZoneId.systemDefault()
         );
     }
 
     public void setStartTime(Long startTime) {
-        this.startTime = startTime;
+        this.startTime = startTime.toString();
     }
 
     public void setEndTime(Long endTime) {
-        this.endTime = endTime;
+        this.endTime = endTime.toString();
     }
 }

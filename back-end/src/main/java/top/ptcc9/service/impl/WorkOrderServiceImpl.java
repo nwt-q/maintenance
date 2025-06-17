@@ -31,11 +31,11 @@ public class WorkOrderServiceImpl extends ServiceImpl<WorkOrderMapper, WorkOrder
             rt.setPageSize(-1);
         }
         final List<WorkOrder> workOrders = workOrderMapper.selectLists(rt.getPage(),
-                rt.getPageSize(), rt.getStartTime(),rt.getEndTime());
+                rt.getPageSize(), rt.getStartTime(1L),rt.getEndTime(1L));
         List<WorkOrderReqVO> list = new ArrayList<>();
         for (WorkOrder workOrder : workOrders) {
             WorkOrderReqVO workOrderReqVO = new WorkOrderReqVO();
-            workOrderReqVO.setId(workOrder.getId());
+            workOrderReqVO.setId(workOrder.getId().toString());
             workOrderReqVO.setDeviceName(workOrder.getDeviceName());
             workOrderReqVO.setCreateTime(workOrder.getCreateTime().toString());
             workOrderReqVO.setPhoto(workOrder.getPhotoUrl());

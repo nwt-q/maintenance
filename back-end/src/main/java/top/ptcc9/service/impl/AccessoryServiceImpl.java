@@ -2,6 +2,7 @@ package top.ptcc9.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import top.ptcc9.common.R;
+import top.ptcc9.controller.vo.AccessoryDataReqVO;
 import top.ptcc9.controller.vo.AccessoryReqVO;
 import top.ptcc9.domain.Accessory;
 import top.ptcc9.service.AccessoryService;
@@ -40,6 +41,17 @@ public class AccessoryServiceImpl extends ServiceImpl<AccessoryMapper, Accessory
         }
         return accessoryReqVO;
     }
+
+    @Override
+    public List<AccessoryDataReqVO> getList() {
+        List<AccessoryDataReqVO> list = new ArrayList<>();
+        final List<Accessory> accessories = accessoryMapper.selectAList();
+        for(Accessory accessory : accessories){
+            list.add(new AccessoryDataReqVO(accessory.getAccessoryName(), accessory.getUsedNum(), accessory.getStock()));
+        }
+        return list;
+    }
+
 }
 
 

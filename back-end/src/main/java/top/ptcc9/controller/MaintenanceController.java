@@ -54,7 +54,7 @@ public class MaintenanceController {
             mimeMessageHelper.setSubject("委托维修设备函（催办函）！");
             //邮件内容
             mimeMessageHelper.setText("我校设备“"+ record.getEquipmentName() + "”" + "于"
-                    + CommonUtil.simpleDate2DateTimeAsString(record.getCreateTime())
+                    + CommonUtil.simpleDate2DateTimeAsString(record.getCreateTime(1))
                     + "经管理员确认发生" + record.getCategoryName()
                     + "! 请" + maintenance.getUsername() +"("+ maintenance.getMobile() +")"
                     + "师傅尽快来维修，预祝商祺！");

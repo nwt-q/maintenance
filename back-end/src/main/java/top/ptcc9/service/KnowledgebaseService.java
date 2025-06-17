@@ -1,6 +1,7 @@
 package top.ptcc9.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.ptcc9.controller.vo.DataBase;
 import top.ptcc9.entity.Knowledgebase;
 
 /**
@@ -10,4 +11,5 @@ import top.ptcc9.entity.Knowledgebase;
 */
 public interface KnowledgebaseService extends IService<Knowledgebase> {
 
+    String upload(DataBase dataBase);
 }

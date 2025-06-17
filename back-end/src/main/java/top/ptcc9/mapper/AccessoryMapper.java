@@ -19,6 +19,10 @@ import java.util.List;
 public interface AccessoryMapper extends BaseMapper<Accessory> {
 
     List<Accessory> selectList(AccessoryReqVO params);
+
+    void updateUsedNum(Integer id, Integer ct);
+
+    List<Accessory> selectAList();
 }
 
 

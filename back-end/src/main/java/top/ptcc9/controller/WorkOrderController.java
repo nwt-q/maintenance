@@ -1,7 +1,6 @@
 package top.ptcc9.controller;
 
 
-import cn.hutool.core.collection.CollUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import top.ptcc9.common.R;
 import top.ptcc9.controller.vo.WorkOrderReqVO;
 import top.ptcc9.entity.WorkOrder;
+import top.ptcc9.service.RecordService;
 import top.ptcc9.service.WorkOrderService;
 
 import javax.annotation.Resource;
@@ -25,6 +25,16 @@ public class WorkOrderController {
     @Resource
     private WorkOrderService workOrderService;
 
+    @Resource
+    private RecordService recordService;
+
+
+    @GetMapping("/workOrderList")
+    public R<List<WorkOrderReqVO>> workOrderList(WorkOrderReqVO rt){
+        System.out.println(rt);
+        return R.build(SUCCESS,workOrderService.getList(rt));
+    }
+
     /**
      * 获取待办项
      * @param rt
@@ -32,8 +42,7 @@ public class WorkOrderController {
      */
     @GetMapping("/workOrder")
     public R<List<WorkOrderReqVO>> workOrder(WorkOrderReqVO rt){
-        System.out.println(rt);
-        return R.build(SUCCESS,workOrderService.getList(rt));
+        return R.build(SUCCESS,recordService.getlist(rt));
     }
 
    @PostMapping("/updataworkOrder")
@@ -49,10 +58,7 @@ public class WorkOrderController {
        t.setStatus(workOrder.getStatus());
        t.setDescription(workOrder.getDescription());
        t.setPhotoUrl(workOrder.getPhoto());
-
         workOrderService.update(t);
-
        return R.build(SUCCESS,"更改表结构");
    }
-
 }

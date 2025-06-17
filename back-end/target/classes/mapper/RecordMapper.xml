@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.ptcc9.mapper.RecordMapper">
+
+    <resultMap id="BaseResultMap" type="top.ptcc9.entity.Record">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="equipmentId" column="equipment_id" jdbcType="VARCHAR"/>
+            <result property="equipmentName" column="equipment_name" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="categoryId" column="category_id" jdbcType="VARCHAR"/>
+            <result property="categoryName" column="category_name" jdbcType="VARCHAR"/>
+            <result property="maintenanceId" column="maintenance_id" jdbcType="VARCHAR"/>
+            <result property="maintenanceName" column="maintenance_name" jdbcType="VARCHAR"/>
+            <result property="cause" column="cause" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="BIGINT"/>
+            <result property="pic" column="pic" jdbcType="VARCHAR"/>
+            <result property="startTime" column="start_time" jdbcType="BIGINT"/>
+            <result property="timeoutMinutes" column="timeout_minutes" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="emergencyLevel" column="emergency_level" jdbcType="VARCHAR"/>
+            <result property="evaluateContent" column="evaluate_content" jdbcType="VARCHAR"/>
+            <result property="evaluateStar" column="evaluate_star" jdbcType="INTEGER"/>
+            <result property="evaluateTime" column="evaluate_time" jdbcType="BIGINT"/>
+            <result property="initiatorId" column="initiator_id" jdbcType="VARCHAR"/>
+             <result property="isTimeout" column="is_timeout" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,equipment_id,equipment_name,
+        user_id,category_id,category_name,
+        maintenance_id,maintenance_name,cause,
+        create_time,pic,start_time,
+        finish_time,timeout_minutes,status,
+        emergency_level,evaluate_content,evaluate_star,
+        evaluate_time,initiator_id
+    </sql>
+
+    <!-- 查询记录列表 -->
+    <select id="selectLists" resultType="top.ptcc9.entity.Record">
+        SELECT * FROM record
+        <where>
+            maintenance_id = #{It}
+            <!-- 时间范围查询 -->
+            <if test="startTime != null">
+                AND create_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND create_time &lt;= #{endTime}
+            </if>
+        </where>
+        LIMIT #{page}, #{pageSize}
+    </select>
+
+    <!-- 更新记录 -->
+    <update id="update">
+        UPDATE record
+        <set>
+            <if test="equipmentId != null and equipmentId != ''">
+                equipment_id = #{equipmentId},
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                equipment_name = #{equipmentName},
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId},
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                category_id = #{categoryId},
+            </if>
+            <if test="categoryName != null and categoryName != ''">
+                category_name = #{categoryName},
+            </if>
+            <if test="maintenanceId != null and maintenanceId != ''">
+                maintenance_id = #{maintenanceId},
+            </if>
+            <if test="maintenanceName != null and maintenanceName != ''">
+                maintenance_name = #{maintenanceName},
+            </if>
+            <if test="cause != null and cause != ''">
+                cause = #{cause},
+            </if>
+            <if test="pic != null and pic != ''">
+                pic = #{pic},
+            </if>
+            <if test="timeoutMinutes != null">
+                timeout_minutes = #{timeoutMinutes},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="isTimeout != null">
+                is_timeout = #{isTimeout},
+            </if>
+            <if test="finishTime != null">
+                finish_time = #{finishTime},
+            </if>
+            <if test="emergencyLevel != null and emergencyLevel != ''">
+                emergency_level = #{emergencyLevel},
+            </if>
+            <if test="evaluateContent != null and evaluateContent != ''">
+                evaluate_content = #{evaluateContent},
+            </if>
+            <if test="evaluateStar != null">
+                evaluate_star = #{evaluateStar},
+            </if>
+            <if test="initiatorId != null and initiatorId != ''">
+                initiator_id = #{initiatorId}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据ID查询记录 -->
+    <select id="selectById" resultType="top.ptcc9.entity.Record">
+        SELECT * FROM record WHERE id = #{id}
+    </select>
+
+    <select id="getData" resultType="top.ptcc9.entity.Record">
+        SELECT * FROM record WHERE maintenance_id = #{maintenanceId}
+    </select>
+
+    <select id="getData2" resultType="top.ptcc9.entity.Record">
+        SELECT * FROM record WHERE maintenance_id = #{maintenanceId} AND status = '进行中'
+    </select>
+
+    <!-- 插入新记录 -->
+    <insert id="insert" parameterType="top.ptcc9.entity.Record">
+        INSERT INTO record
+        (id, equipment_id, equipment_name, user_id, category_id, category_name,
+         maintenance_id, maintenance_name, cause, create_time, pic, start_time,
+         finish_time, timeout_minutes, status, emergency_level, evaluate_content,
+         evaluate_star, evaluate_time, initiator_id)
+        VALUES
+            (#{id}, #{equipmentId}, #{equipmentName}, #{userId}, #{categoryId}, #{categoryName},
+             #{maintenanceId}, #{maintenanceName}, #{cause}, #{createTime}, #{pic}, #{startTime},
+             #{finishTime}, #{timeoutMinutes}, #{status}, #{emergencyLevel}, #{evaluateContent},
+             #{evaluateStar}, #{evaluateTime}, #{initiatorId})
+    </insert>
+
+    <!-- 根据ID删除记录 -->
+    <delete id="deleteById">
+        DELETE FROM record WHERE id = #{id}
+    </delete>
+</mapper>
